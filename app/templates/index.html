@@ -57,7 +57,8 @@
     <div style="float: left; width: 48%;">
         <button id="show-code-btn" onclick="toggleEditor()">Show code</button>
         <!-- <img src="/graph" id="graph-img" alt="Generated Graph"> -->
-        <img src="/graph?rand={{ random_value }}" id="graph-img" alt="Generated Graph">
+        <img src="/graph" id="graph-img" alt="Generated Graph">
+
     </div>
 
 
@@ -70,6 +71,37 @@
         <input id="save-btn" type="submit" value="Save">
     </form>
 </div>
+
+<script>
+    document.getElementById('save-btn').addEventListener('click', function(event) {
+    event.preventDefault();  // prevent the form from submitting the traditional way
+
+    // Create FormData from the form
+    const formData = new FormData(event.target.closest('form'));
+
+    // Send the code to the Flask backend
+    fetch('/save', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            // If save was successful, update the graph
+            const graphImg = document.getElementById('graph-img');
+            const newSrc = '/graph?rand=' + new Date().getTime(); // Adding a random query to bypass cache
+            graphImg.setAttribute('src', newSrc);
+        } else {
+            console.error('Failed to save code.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+
+
+</script>
 
 </body>
 </html>
