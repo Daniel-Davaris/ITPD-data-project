@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Python File</title>
+    <style>
+        /* Additional styles for the code editor */
+        #editor {
+            background-color: #f7f7f7;
+            border: 1px solid #ccc;
+            padding: 10px;
+            font-family: "Courier New", Courier, monospace;
+            width: 48%;
+            height: auto;
+            float: right; /* This will place it on the right side */
+            display: none; /* Initially hidden */
+        }
+        #show-code-btn {
+            display: block;
+            margin: 20px 0;
+            padding: 10px 15px;
+            background-color: #0099cc;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #show-code-btn:hover {
+            background-color: #0077b3;
+        }
+        #save-btn {
+            display: block;
+            margin: 20px 0;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #save-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script>
+        function toggleEditor() {
+            var editor = document.getElementById("editor");
+            if (editor.style.display === "none") {
+                editor.style.display = "block";
+            } else {
+                editor.style.display = "none";
+            }
+        }
+    </script>
+</head>
+<body>
+    <div style="float: left; width: 48%;">
+        <button id="show-code-btn" onclick="toggleEditor()">Show code</button>
+        <!-- <img src="/graph" id="graph-img" alt="Generated Graph"> -->
+        <img src="/graph?rand={{ random_value }}" id="graph-img" alt="Generated Graph">
+    </div>
+
+
+
+<div id="editor">
+    <form action="/save" method="post">
+        <pre>
+<textarea name="content" rows="25" cols="60">{{ content }}</textarea>
+        </pre>
+        <input id="save-btn" type="submit" value="Save">
+    </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Refresh</title>
+    <style>
+        .container {
+            display: flex;
+        }
+        .left, .right {
+            flex: 1;
+            height: 100vh;
+            overflow: auto;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left column -->
+        <div class="left">
+            <p>Your content here...</p>
+        </div>
+
+        <!-- Right column -->
+        <div class="right">
+            <iframe src="http://localhost:8888" frameborder="0"></iframe>
+        </div>
+    </div>
+</body>
+</html>
