@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Python File</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        /* Additional styles for the code editor */
+        body {
+            background-color: #2c2c2c;
+            color: white;
+        }
+        #editor {
+            background-color: #3c3c3c;
+            border: 1px solid #ccc;
+            padding: 10px;
+            font-family: "Courier New", Courier, monospace;
+            width: 48%;
+            height: auto;
+            float: right; /* This will place it on the right side */
+            display: none; /* Initially hidden */
+        }
+        #show-code-btn, #save-btn {
+            margin: 20px 0;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+    
+        }
+        #show-code-btn {
+            background-color: #14b019;
+        }
+        #show-code-btn:hover {
+            background-color: #14b019;
+        }
+        #save-btn {
+            background-color: #14b019;
+        }
+        #save-btn:hover {
+            background-color: #14b019;
+        }
+        .navbar {
+            margin-bottom: 20px;
+        }
+        /* Styles for the vertical navbar */
+        .vertical-nav {
+            width: 200px;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #343a40;  /* Dark background */
+        }
+
+        .vertical-nav a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .vertical-nav a:hover {
+            background-color: #575757;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a style="padding-left:200px"class="navbar-brand" href="/">
+        <img src="/static/itp-logo.png" width="40" height="40" class="d-inline-block align-top" alt="">
+        ITP Intelligence 
+    </a>
+    </nav>
+<!-- Vertical Navbar -->
+<div style="background-color: #14b019;"class="vertical-nav">
+    <div class="row ">
+        <div style="float:right;padding-right:0px;"class="col-3">
+            <i style="float:right;padding-top:15px;"class="material-icons">analytics</i>
+        </div>
+        <div style="padding-left:0px;"class="col-9">
+            <a style="width:150px !important;" href="/">Dashboard</a>
+        </div>
+    </div>
+    <div class="row ">
+        <div style="float:right;padding-right:0px;"class="col-3">
+            <i style="float:right;padding-top:15px;"class="material-icons">code</i>
+        </div>
+        <div style="padding-left:0px;"class="col-9">
+            <a style="width:150px !important;" href="/Object_studio">Object Studio</a>
+        </div>
+    </div>
+    <div class="row ">
+        <div style="float:right;padding-right:0px;"class="col-3">
+            <i style="float:right;padding-top:15px;"class="material-icons">smart_toy</i>
+        </div>
+        <div style="padding-left:0px;"class="col-9">
+            <a style="width:150px !important;"href="/ML_studio">ML Studio</a>
+        </div>
+    </div>
+    <div class="row ">
+        <div style="float:right;padding-right:0px;"class="col-3">
+            <i style="float:right;padding-top:15px;"class="material-icons">storage</i>
+        </div>
+        <div style="padding-left:0px;"class="col-9">
+            <a style="width:150px !important;"href="/Data_studio">Data Studio</a>
+        </div>
+    </div>
+  </div>
+  
+
+<div class="container" style="margin-left: 210px;">
+    <div style="float: left; width: 48%;">
+        <!-- <button id="show-code-btn" onclick="toggleEditor()">Show code</button> -->
+        <!-- <img src="/graph" id="graph-img" alt="Generated Graph"> -->
+    </div>
+
+
+
+    <div id="editor">
+        <form action="/save" method="post">
+            <textarea style="background-color: #2c2c2c; color:#14b019" name="content" rows="25" cols="60" style="white-space: pre-wrap;">{{ content }}</textarea>
+            <input id="save-btn" type="submit" value="Save">
+        </form>
+    </div>
+
+</div>
+<script>
+    function toggleEditor() {
+        var editor = document.getElementById("editor");
+        if (editor.style.display === "none") {
+            editor.style.display = "block";
+        } else {
+            editor.style.display = "none";
+        }
+    }
+</script>
+<script>
+    document.getElementById('save-btn').addEventListener('click', function(event) {
+    event.preventDefault();  // prevent the form from submitting the traditional way
+
+    // Create FormData from the form
+    const formData = new FormData(event.target.closest('form'));
+
+    // Send the code to the Flask backend
+    fetch('/save', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            // If save was successful, update the graph
+            const graphImg = document.getElementById('graph-img');
+            const newSrc = '/graph?rand=' + new Date().getTime(); // Adding a random query to bypass cache
+            graphImg.setAttribute('src', newSrc);
+        } else {
+            console.error('Failed to save code.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+
+
+</script>
+
+</body>
+</html>
