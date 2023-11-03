@@ -21,7 +21,7 @@
             float: right; /* This will place it on the right side */
             display: none; /* Initially hidden */
         }
-        #show-code-btn, #save-btn {
+        #show-code-btn, #save-btn, #run-python-btn, #stopButton{
             margin: 20px 0;
             padding: 10px 15px;
             border: none;
@@ -31,6 +31,14 @@
         }
         #show-code-btn {
             background-color: #14b019;
+        }
+        #stopButton{
+            background-color: #b01414;
+            color:white;
+        }
+        #run-python-btn {
+            background-color: #14b019;
+            color:white;
         }
         #show-code-btn:hover {
             background-color: #14b019;
@@ -64,6 +72,89 @@
         .vertical-nav a:hover {
             background-color: #575757;
         }
+
+        #progressBar[value]::-webkit-progress-bar {
+            background-color: #eee !important;
+        }
+
+        #progressBar[value]::-webkit-progress-value {
+            background-color: green !important;
+        }
+
+        #progressBar[value]::-moz-progress-bar {
+            background-color: green !important;
+        }
+        #pkl-file-list-container {
+        /* Set a fixed height and enable auto overflow for scrollbar */
+        height: 250px; /* Adjust this value as needed */
+        overflow-y: auto; /* This will show a scrollbar when the content overflows */
+        border: 1px solid #ccc; /* Optional: adds a border around the list container */
+        margin-top: 10px; /* Space above the container */
+        padding: 5px; /* Padding inside the container */
+        background-color: #f8f8f800; /* Optional: background color of the container */
+    }
+        .pkl-file-item {
+        /* Your CSS properties */
+        color: #0ece3e;              /* Text color */
+        background-color: #00292900; /* Background color */
+        margin: 0px 0;            /* Margin around each item */
+        padding: 10px;            /* Padding inside each item */
+        border: 1px solid #ddd;   /* Border around each item */
+        list-style-type: none;    /* Remove the default list bullet */
+        cursor: pointer;          /* Change cursor to pointer on hover */
+        }
+        .pkl-file-item:hover {
+            background-color: #38770e; /* Change background color on hover */
+        }
+        .panel{
+            border:1px solid rgb(88, 88, 88);
+            padding:15px;
+        }
+        .box{
+            border: 1px solid white;
+            padding:15px;
+            background-color: rgb(0, 0, 0);
+            height:40vh;
+        }   
+
+        /* The Modal (background) */
+        .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+        }
+
+        /* The Close Button */
+        .modal-close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        }
+
+        .modal-close:hover,
+        .modal-close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+        }
+
     </style>
 </head>
 <body>
@@ -74,6 +165,7 @@
         ITP Intelligence 
     </a>
     </nav>
+    
 <!-- Vertical Navbar -->
 <div style="background-color: #14b019;"class="vertical-nav">
     <div class="row ">
@@ -109,24 +201,262 @@
         </div>
     </div>
   </div>
-  
+  <div class="container"><h1>Object Studio</h1></div>
 
-<div class="container" style="margin-left: 210px;">
-    <div style="float: left; width: 48%;">
-        <!-- <button id="show-code-btn" onclick="toggleEditor()">Show code</button> -->
-        <!-- <img src="/graph" id="graph-img" alt="Generated Graph"> -->
-    </div>
+  <div class="container">
+                    <div class="row">
+                        <div class="panel col-3">
+                            <div style="background-color:rgb(214, 126, 202) !important;"class="box">
+                            <!-- <div class="container" style="margin-left: 210px;">
+                                <div style="float: left; width: 48%;"> -->
+                                    <!-- <button id="show-code-btn" onclick="toggleEditor()">Show code</button> -->
+                                    <!-- <img src="/graph" id="graph-img" alt="Generated Graph"> -->
+                                    <!-- <div style="padding:20px;border:1px solid white;"> -->
+                                      
+                                        <label ><b>REC dataset<i style="margin-left:20px;"class="material-icons">dataset</i></b></label><br>
+                                        
+                                    <!-- </div>
+                                </div> -->
+                        
+                            </div>
+                            </div>
+                        <!-- </div>   -->
+                        <div class=" panel col-3">
+                            <div style="background-color:rgb(214, 126, 202) !important;" class="box">
+                                <label ><b>PostCode dataset<i style="margin-left:20px;"class="material-icons">dataset</i></b></label><br>
+                                
+                            </div>
+                        </div>
+                        <div class=" panel col-3">
+                            <div style="background-color:rgb(214, 126, 202) !important;" class="box">
+                                <label ><b>Transfer dataset<i style="margin-left:20px;"class="material-icons">dataset</i></b></label><br>
+                            </div>
+                        </div>
+                        <div class=" panel col-3">
+                            <div style="background-color:rgb(214, 176, 126) !important;" class="box">
+                                <label ><b>Accreditation code list<i style="margin-left:10px;"class="material-icons">list</i></b></label><br>
+                            </div>
+                        </div>
 
 
+                        <div class="panel col-12">
+                            <div class="box">
+                                <div id="pkl-rec-registry-container" class="pkl-file-list-container">
+                                    <h5>REC Registry</h5>
+                                    <ul id="pkl-rec-registry-list" style="padding:0px">
+                                        <!-- List of .pkl files will be populated here by JavaScript -->
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="box">
+                                <div id="pkl-rec-registry-container2" class="pkl-file-list-container">
+                                    <h5>PostCode data</h5>
+                                    <ul id="pkl-postcode-data-list" style="padding:0px">
+                                        <!-- List of .pkl files will be populated here by JavaScript -->
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="box">
+                                <div id="pkl-rec-registry-container3" class="pkl-file-list-container">
+                                    <h5>Search results and transfer history</h5>
+                                    <ul id="pkl-transfer-history-list" style="padding:0px">
+                                        <!-- List of .pkl files will be populated here by JavaScript -->
+                                    </ul>
+                                </div>
+                            </div>
 
-    <div id="editor">
-        <form action="/save" method="post">
-            <textarea style="background-color: #2c2c2c; color:#14b019" name="content" rows="25" cols="60" style="white-space: pre-wrap;">{{ content }}</textarea>
-            <input id="save-btn" type="submit" value="Save">
-        </form>
-    </div>
+                           
+                            
+                              
+                        
+                                          
+                        </div>  
+                        <!-- </div> -->
 
+                        
+
+                    </div>  
 </div>
+ 
+<!-- The Modal -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+      <h4>Edit Code</h4>
+      <!-- Use a textarea as a simple text editor -->
+      <textarea id="codeEditor" style="width:100%; height:200px;"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button id="saveCodeBtn">Save & Run Code</button>
+      <button id="closeModal" class="modal-close">Close</button>
+    </div>
+  </div>
+
+
+
+<script>
+function showEditModal(filename, folder) {
+    // Open modal and load the content
+    const modal = document.getElementById('editModal');
+    modal.style.display = 'block';
+
+    // Fetch the Python code for editing
+    fetch('/read_or_create_py', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ filename, folder }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('codeEditor').value = data.codeContent;
+    });
+
+    // Set up the save button
+    document.getElementById('saveCodeBtn').onclick = function() {
+        const updatedCode = document.getElementById('codeEditor').value;
+        fetch('/save_and_run_code', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ filename, folder, codeContent: updatedCode }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert('Code executed and saved successfully.');
+            } else {
+                alert('Failed to execute code: ' + data.message);
+            }
+        });
+    };
+}
+
+</script>
+
+
+
+
+<script>
+   function fetchPklFiles(containerId, folderEndpoint) {
+    fetch(folderEndpoint)
+        .then(response => response.json())
+        .then(files => {
+            const fileListContainer = document.getElementById(containerId);
+            fileListContainer.innerHTML = ''; // Clear the list before adding new items
+            files.forEach(file => {
+                const listItem = document.createElement('li');
+                listItem.textContent = file;
+                listItem.className = 'pkl-file-item'; // Add the class name here
+
+                // Create an Edit button and append it to the list item
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Edit';
+                editButton.className = 'edit-btn';
+                editButton.style.float = 'right';
+                // Add background-color:red to the button
+                editButton.style.backgroundColor = 'orange';
+                editButton.onclick = function() {
+                    showEditModal(file);
+                };
+
+                listItem.appendChild(editButton);
+                fileListContainer.appendChild(listItem);
+            });
+        })
+        .catch(error => console.error('Error fetching .pkl file list:', error));
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    fetchPklFiles('pkl-rec-registry-list', '/list_pkl_files/folder1');
+    fetchPklFiles('pkl-postcode-data-list', '/list_pkl_files/folder2');
+    fetchPklFiles('pkl-transfer-history-list', '/list_pkl_files/folder3');
+
+    // Optionally set intervals for each list if needed
+    setInterval(function() {
+        fetchPklFiles('pkl-rec-registry-list', '/list_pkl_files/folder1');
+    }, 5000);
+    setInterval(function() {
+        fetchPklFiles('pkl-postcode-data-list', '/list_pkl_files/folder2');
+    }, 5000);
+    setInterval(function() {
+        fetchPklFiles('pkl-transfer-history-list', '/list_pkl_files/folder3');
+    }, 5000);
+});
+</script>
+
+
+
+<script>
+    var intervalId;
+
+    function updateProgressBar() {
+    fetch('/progress')
+        .then(response => response.json())
+        .then(data => {
+            if (data.progress === -1) {
+                // Stop the updates if the scraper has finished
+                clearInterval(intervalId);
+            } else {
+                document.getElementById('progressBar').value = data.progress;
+            }
+        });
+}
+
+    // Start updating the progress bar when the 'Run' button is clicked
+    document.getElementById('run-python-btn').addEventListener('click', function() {
+        intervalId = setInterval(updateProgressBar, 1000);
+    });
+
+    // Stop updating the progress bar when the 'Stop' button is clicked
+    document.getElementById('stopButton').addEventListener('click', function() {
+        clearInterval(intervalId);
+    });
+</script>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const stopButton = document.getElementById("stopButton");
+    stopButton.addEventListener("click", function() {
+        fetch('/stop_python_code', {method: 'POST'})
+        .then(response => response.json())
+        .then(data => console.log(data));
+    });
+});
+</script>
+
+<script>
+   document.getElementById('run-python-btn').addEventListener('click', function() {
+    const numThreads = document.getElementById('numThreads').value || 50;  // get the value of numThreads input
+    
+    fetch('/run_python_code', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            numThreads: numThreads  // include numThreads in your request body
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            // do nothing
+
+            // alert("Python code executed successfully.");
+        } else {
+            // alert("Failed to execute Python code.");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+
+</script>
 <script>
     function toggleEditor() {
         var editor = document.getElementById("editor");

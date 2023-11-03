@@ -84,6 +84,38 @@
         #progressBar[value]::-moz-progress-bar {
             background-color: green !important;
         }
+        #pkl-file-list-container {
+        /* Set a fixed height and enable auto overflow for scrollbar */
+        height: 250px; /* Adjust this value as needed */
+        overflow-y: auto; /* This will show a scrollbar when the content overflows */
+        border: 1px solid #ccc; /* Optional: adds a border around the list container */
+        margin-top: 10px; /* Space above the container */
+        padding: 5px; /* Padding inside the container */
+        background-color: #f8f8f800; /* Optional: background color of the container */
+    }
+        .pkl-file-item {
+        /* Your CSS properties */
+        color: #0ece3e;              /* Text color */
+        background-color: #00292900; /* Background color */
+        margin: 0px 0;            /* Margin around each item */
+        padding: 10px;            /* Padding inside each item */
+        border: 1px solid #ddd;   /* Border around each item */
+        list-style-type: none;    /* Remove the default list bullet */
+        cursor: pointer;          /* Change cursor to pointer on hover */
+        }
+        .pkl-file-item:hover {
+            background-color: #38770e; /* Change background color on hover */
+        }
+        .panel{
+            border:1px solid rgb(88, 88, 88);
+            padding:15px;
+        }
+        .box{
+            border: 1px solid white;
+            padding:15px;
+            background-color: rgb(0, 0, 0);
+            height:40vh;
+        }   
     </style>
 </head>
 <body>
@@ -94,6 +126,7 @@
         ITP Intelligence 
     </a>
     </nav>
+    
 <!-- Vertical Navbar -->
 <div style="background-color: #14b019;"class="vertical-nav">
     <div class="row ">
@@ -129,30 +162,92 @@
         </div>
     </div>
   </div>
-  
+  <div class="container"><h1>Data Studio</h1></div>
 
-<div class="container" style="margin-left: 210px;">
-    <div style="float: left; width: 48%;">
-        <!-- <button id="show-code-btn" onclick="toggleEditor()">Show code</button> -->
-        <!-- <img src="/graph" id="graph-img" alt="Generated Graph"> -->
-        <div style="padding:20px;border:1px solid white;">
-            <label ><b>Get latest transfer history:</b></label><br>
-           
-            <label for="numThreads">Number of Threads:</label><br>
-            <label style="font-size:12px;"> Defaults to 50 if not provided</label><br>
-            <input type="number" id="numThreads" name="numThreads"><br>
-            <button id="run-python-btn">Run</button>
-            <button type="button" id="stopButton">Stop</button>
-            <progress id="progressBar" value="0" max="1"></progress>
-        </div>
-    </div>
-    
-   
-      
+  <div class="container">
+                    <div class="row">
+                        <div class="panel col-6">
+                            <div class="box">
+                            <!-- <div class="container" style="margin-left: 210px;">
+                                <div style="float: left; width: 48%;"> -->
+                                    <!-- <button id="show-code-btn" onclick="toggleEditor()">Show code</button> -->
+                                    <!-- <img src="/graph" id="graph-img" alt="Generated Graph"> -->
+                                    <!-- <div style="padding:20px;border:1px solid white;"> -->
+                                        <label ><b>Get latest transfer history:</b></label><br>
+                                    
+                                        <label for="numThreads">Number of Threads:</label><br>
+                                        <label style="font-size:12px;"> Defaults to 50 if not provided</label><br>
+                                        <input type="number" id="numThreads" name="numThreads"><br>
+                                        <button id="run-python-btn">Run</button>
+                                        <button type="button" id="stopButton">Stop</button>
+                                        <progress id="progressBar" value="0" max="1"></progress>
+                                    <!-- </div>
+                                </div> -->
+                        
+                            </div>
+                            </div>
+                        <!-- </div>   -->
+                        <div class=" panel col-6">
+                            <div class="box">
+                                <label ><b>Get latest API data:</b></label><br>
+                              
+                               
+                            </div>
+                        </div>
+                        <div class="panel col-6">
+                            <div class="box">
+                            <!-- <div class="pt-3 container" style="margin-left: 210px;"> -->
+                                <!-- ... existing containers ... -->
+                                <!-- <div style="float: left; width: 48%;">
+                                <div style="padding:20px;border:1px solid white;"> -->
+                                        <div id="pkl-file-list-container" style="">
+                                            <h5>Scraper runs</h5>
+                                            <ul style="padding:0px"id="pkl-file-list">
+                                                <!-- List of .pkl files will be populated here by JavaScript -->
+                                            </ul>
+                                        </div>
+                                        <!-- </div> -->
+                                <!-- </div> -->
+                            </div>
+                            </div>  
+                        <!-- </div> -->
 
+                        <div class=" panel col-6">
+                            <div class="box">
+                                <h5>API pulls</h5>
+                            </div>
+                        </div>
+
+                    </div>  
+</div>
  
 
-</div>
+        
+
+
+<script>
+    function fetchPklFiles() {
+        fetch('/list_pkl_files')
+            .then(response => response.json())
+            .then(files => {
+                const fileListContainer = document.getElementById('pkl-file-list');
+                fileListContainer.innerHTML = ''; // Clear the list before adding new items
+                files.forEach(file => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = file;
+                    listItem.className = 'pkl-file-item'; // Add the class name here
+                    fileListContainer.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('Error fetching .pkl file list:', error));
+    }
+
+    // Call this function on page load and set it to refresh periodically
+    document.addEventListener('DOMContentLoaded', fetchPklFiles);
+    setInterval(fetchPklFiles, 5000);
+</script>
+
+
 
 <script>
     var intervalId;

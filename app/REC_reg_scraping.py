@@ -12,7 +12,7 @@ from threading import Lock
 import traceback
 import re
 import sys
-
+from datetime import datetime
 
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -146,4 +146,12 @@ if __name__ == '__main__':
 
     search_results_data = pd.DataFrame(search_results_data, columns=s_headers)
     transfer_history_data = pd.DataFrame(transfer_history_data, columns=t_headers)
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+
+    search_results_filename = f"Scraper_run_search_results_{timestamp}.pkl"
+    transfer_history_filename = f"Scraper_run_transfer_history_{timestamp}.pkl"
+
+    search_results_data.to_pickle(search_results_filename)
+    transfer_history_data.to_pickle(transfer_history_filename)
+
     open('progress.txt', 'w').close()
